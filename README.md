@@ -1,14 +1,14 @@
 # segment-cell-division
-A neural network to identify cell division
+A neural network to detect cell division
 
 Run train.py to train; then run get_predictions.py to generate predictions for images in a folder (warning: images must all be of same size for get_predictions)
 
-Our dataset:
-- preimplantation mouse embryos
-- light sheet microscopy
+About our dataset:
+- mouse embryos, preimplantation
 - fluorescent stain on nuclei
+- light sheet microscopy
 - each nucleus has diameter approx. 30 pixels
-- cells labelled as 1 if about to divide, between 0 and 1 if dividing soon, and 0 if not dividing soon
+- for ground truth, cells were labelled as 1 if about to divide, between 0 and 1 if dividing soon, and 0 if not dividing soon
 - training data has ~500 instances of cell divisions captured in ~8000 2D images
 
 To set up the environment, we used
