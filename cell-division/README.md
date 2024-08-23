@@ -2,7 +2,7 @@
 
 - Training data: 3D volumes of 11 embryos with 120 frames each. We first segmented the embryos (using the process described in ``tools/embryo_seg_playground.pynb``). We masked out any signal that was not part of the embryo and cropped the images down to the size of the embryos. For each cropped image, now containing only one embryo, we downsampled by a factor of 2 in the x and y directions (so that the typical diameter of a nucleus was ~35 pixels) and then took only those 2D slices in the x-y plane that contained a nonzero label. (Thus our approach is fully 2D.) The ground truth segmentation of each embryo had been obtained by Karsa et al. (manuscript in prepartion) who applied an automatic segmentation and tracking algorithm and then performed manual correction. From this, we obtain labels for cell divisions by setting voxels to 1 if its nucleus is about to divide, 0 if not dividing soon or not part of the cell, and between 0 and 1 if dividing soon (explicitly, we used values 0.8, 0.6, 0.4, 0.2 as the time to division became progressively longer). Altogether, the training data has ~500 instances of cell divisions captured in ~6000 2D images.
 
-- Directory structure: within a data directory, there are subdirectories with names ``img``, ``val_img``, ``test_img``, ``div_lbl``, ``val_div_lbl``, ``test_div_lbl``.  The intensity files are saved with ``_img.tif`` suffices and corresponding labels are saved with ``_div.tif`` suffices.
+- Directory structure: within a data directory, there are subdirectories with names ``img``, ``val_img``, ``div_lbl``, ``val_div_lbl``.  The intensity files are saved with ``_img.tif`` suffices and corresponding labels are saved with ``_div.tif`` suffices.
 
 - To set up the environment, we used
   ```
