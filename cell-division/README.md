@@ -1,8 +1,6 @@
 # Training a model for cell division
 
-- Training data: 3D volumes of 11 embryos with 120 frames each. This originally had anisotropy factor 11.5, with a typical diameter of ~70 pixels in the x and y directions. By downsampling by a factor of 2 in the x and y directions and upsampling by a factor of 5.75 in the z-direction (by linear interpolation), we had isotropic images and a typical diameter of 35. We took slices in the x-y, x-z and y-z planes: we took every x-y plane, and sampled every twelfth x-z and y-z plane. We used only planes containing at least three instances of nuclei, giving roughly 8000 planes of training data in total. These were all saved as .tif files in one folder (see tools/resize_dataset_original_embryo.py).
-Training data: each nucleus has diameter approx. 30 pixels- for ground truth, cells were labelled as 1 if about to divide, between 0 and 1 if dividing soon, and 0 if not dividing soon- training data has ~500 instances of cell divisions captured in ~8000 2D images
-![image](https://github.com/user-attachments/assets/e43b2474-f0c0-4a17-a821-24ae90b3770a)
+- Training data: 3D volumes of 11 embryos with 120 frames each. We first segmented the embryos (using the process described in ``tools/embryo_seg_playground.pynb``). We masked out any signal that was not part of the embryo and cropped the images down to the size of the embryos. For each cropped image, now containing only one embryo, we downsampled by a factor of 2 in the x and y directions (so that the typical diameter of a nucleus was ~35 pixels) and then took only those 2D slices in the x-y plane that contained a nonzero label. (Thus our approach is fully 2D.) The ground truth segmentation of each embryo had been obtained by Karsa et al. (manuscript in prepartion) who applied an automatic segmentation and tracking algorithm and then performed manual correction. From this, we obtain labels for cell divisions by setting voxels to 1 if its nucleus is about to divide, 0 if not dividing soon or not part of the cell, and between 0 and 1 if dividing soon (explicitly, we used values 0.8, 0.6, 0.4, 0.2 as the time to division became progressively longer). Altogether, the training data has ~500 instances of cell divisions captured in ~6000 2D images.
 
 
 Run train.py to train; then run get_predictions.py to generate predictions for images in a folder (warning: images must all be of same size for get_predictions)
@@ -10,4 +8,4 @@ To set up the environment, we used```conda create -n imaging python=3.10conda ac
 ![image](https://github.com/user-attachments/assets/144c7acd-9141-4ded-89f6-6f66599db870)
 
 
-The next steps in this direction would be to perform hyperparameter tuning and improve the flexibility of the software to allow for tiling of test images.
+The next steps in this direction would be to perform hyperparameter tuning and improve the flexibility of the software to allow for tiling of test images. After this, we would want to incorporate this tool into a tracking algorithm.
