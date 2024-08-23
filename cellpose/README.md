@@ -1,10 +1,10 @@
 # How to use our retrained model
-
+- To use this, (i) download ``models/nuclei_3d``, (ii) install [Cellpose](https://github.com/MouseLand/cellpose) in your python environment, (iii) in the command line with your environment activated, EITHER load the model using ``python -m cellpose --add_model /path/to/model/nuclei_3d`` and obtain predicions on your data using e.g. ``python -m cellpose --dir /path/to/imgs/ --pretrained_model nuclei_3d --do_3D --diameter 30 --anisotropy 11.5 --save_tif`` (using the diameter and anisotropy of your own data) OR run the Cellpose GUI with ``python -m cellpose --Zstack``, and use the GUI to load and apply the model. Note we do not include a size model. INSERT PHOTO HERE!
 
 
 # How we trained this model
 - Training data: 97 frames of 3D volumes of a hand-labelled embryo. This originally had anisotropy factor 11.5, with a typical diameter of ~70 pixels in the x and y directions. By downsampling by a factor of 2 in the x and y directions and upsampling by a factor of 5.75 in the z-direction (by linear interpolation), we had isotropic images and a typical diameter of 35. We took slices in the x-y, x-z and y-z planes: we took every x-y plane, and sampled every twelfth x-z and y-z plane. We used only planes containing at least three instances of nuclei, giving roughly 8000 planes of training data in total (see tools/resize_dataset_original_embryo.py). The Cellpose software augments data by random rotations, flips and rescaling. We restricted rotations to multiples of 90 degrees only. We wanted to help the model detect faint cells, so we additionally tried randomly rescaling the brightness (after the default normalising, either linearly or by gamma correction) though this did not make a noticeable difference.
-- 
+
 
 
 # Potential for future work: fully 3D Cellpose
