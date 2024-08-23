@@ -1,3 +1,13 @@
 # How to use our retrained model
+
+
+
 # How we trained this model
+- Training data: 97 frames of 3D volumes of a hand-labelled embryo. This originally had anisotropy factor 11.5, with a typical diameter of ~70 pixels in the x and y directions. By downsampling by a factor of 2 in the x and y directions and upsampling by a factor of 5.75 in the z-direction (by linear interpolation), we had isotropic images and a typical diameter of 35. We took slices in the x-y, x-z and y-z planes: we took every x-y plane, and sampled every twelfth x-z and y-z plane. We used only planes containing at least three instances of nuclei, giving roughly 8000 planes of training data in total (see tools/resize_dataset_original_embryo.py). The Cellpose software augments data by random rotations, flips and rescaling. We restricted rotations to multiples of 90 degrees only. We wanted to help the model detect faint cells, so we additionally tried randomly rescaling the brightness (after the default normalising, either linearly or by gamma correction) though this did not make a noticeable difference.
+- 
+
+
 # Potential for future work: fully 3D Cellpose
+In principle, a fully 3D Cellpose (3D NN plus 3D postprocessing) would be able to do better than Cellpose stitched, albeit at the cost of having to manually label 3D images. The use of fully 3D Cellpose was demonstrated by Eschweiler, Smith and Stegmaier (2021) with code available at https://github.com/stegmaierj/Cellpose3D. As a first attempt, we used as training data the 97 frames of 3D volumes of the hand-labelled embryo, with an anisotropy factor of 5.75 resulting from downsampling by a factor of 2 in the x and y directions. The 3D U-Net architecture was able to learn the flows in the x- and y- directions, but struggled more with the cell probabilities and z-flows. As a result, it failed to segment properly the nuclei.
+
+We did not work further on this, but perhaps potential fixes would look at modifications to the way the loss function or to the ground truths (as the ground truths we used were based on the tanh function not the heat diffusion simulation), paying special attention to the anisotropy. Or, perhaps the U-Net architecture could be tweaked so that downsampling is not performed in the z-direction, as explored by Karsa et al (manuscript in preparation). In any case, given that the [original] Cellpose software is maintained and more flexible in contrast to the Cellpose 3D software, it may be helpful to use the code of [original] Cellpose as the basis of further work.
